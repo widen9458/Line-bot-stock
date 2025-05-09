@@ -38,7 +38,7 @@ sns.set_theme(style='ticks')
 
 #指定中文字型
 font_path = os.path.join('fonts','NotoSansTC-VariableFont_wght.ttf')
-font_prop = fm.FantProperties(fname=font_path)
+font_prop = fm.FontProperties(fname=font_path)
 plt.rcParams['font.family'] = font_prop.get_name()
 
 # 設定字型，避免中文亂碼/避免負號亂碼
@@ -248,6 +248,8 @@ def handle_message(event):
                 )
 #監控追蹤價格          
 def alert_monitor():
+    #加入日誌輸出來確認 alert_monitor() 有沒有真的跑起來
+    print('[INFO] Alert monitor thread started')
     while True:
         if not alerts:
             time.sleep(60)
