@@ -29,7 +29,7 @@ CHANNEL_ACCESS_TOKEN = os.environ.get("CHANNEL_ACCESS_TOKEN")
 CHANNEL_SECRET = os.environ.get("CHANNEL_SECRET")
 
 # === 安全檢查（防止沒設變數時報錯） ===
-if not CHANNEL_ACCESS_TOKEN or CHANNEL_SECRET :
+if not CHANNEL_ACCESS_TOKEN or not CHANNEL_SECRET :
     raise Exception("❌ 未設定 CHANNEL_ACCESS_TOKEN 或 CHANNEL_SECRET，請檢查環境變數")
 
 #設定seaborn風格
