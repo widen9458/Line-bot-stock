@@ -16,6 +16,7 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
 
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
 import seaborn as sns
 import twstock
 import re
@@ -35,8 +36,13 @@ if not CHANNEL_ACCESS_TOKEN or not CHANNEL_SECRET :
 #設定seaborn風格
 sns.set_theme(style='ticks')
 
-# 設定字型，避免中文亂碼
-plt.rcParams['font.sans-serif'] = ['Noto Sans TC','Taipei Sans TC Beta', 'SimHei','Microsoft JhengHei']
+#指定中文字型
+font_path = os.path.join('fonts','NotoSansTC-VariableFont_wght.ttf')
+font_prop = fm.FantProperies(fname=font_path)
+plt.rcParams['font.family'] = font_prop.get_name()
+
+# 設定字型，避免中文亂碼/避免負號亂碼
+#plt.rcParams['font.sans-serif'] = ['Noto Sans TC','Taipei Sans TC Beta', 'SimHei','Microsoft JhengHei']
 plt.rcParams['axes.unicode_minus'] = False
 
 # Flask 應用
