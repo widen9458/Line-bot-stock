@@ -19,8 +19,8 @@ import threading
 import time
 
 # Line Bot 設定
-CHANNEL_ACCESS_TOKEN = 'l2lcv/NbUhoBjdcXQ0WNrQfxPcBHxEa4+Z7giks3ToGPdy1nhqW58m2hDvjJuu3weoyzfwKlgCAbdlPvbggmYKVjBaNU/sh3aK6C5aJRY1sdOuOkfgMVvPjo3R810mLoZnBEzgLyJMnCwPRmzFfLlwdB04t89/1O/w1cDnyilFU='
-CHANNEL_SECRET = '40ae041287dc4a8e8f291c6b3e2c597e'
+CHANNEL_ACCESS_TOKEN = '*****************'
+CHANNEL_SECRET = '***********************'
 
 #設定seaborn風格
 sns.set_theme(style='ticks')
@@ -105,7 +105,7 @@ def build_stock_reply(stock_id,days=5):
         return False, price_text, None
 
     filename = plot_stock_trend(stock_id,days)
-    image_url = f"https://ef96-123-241-31-30.ngrok-free.app/{filename}"
+    image_url = f"https://****-123-241-31-30.ngrok-free.app/{filename}"
     return True, price_text, image_url
 
 def parse_user_input(user_message):
