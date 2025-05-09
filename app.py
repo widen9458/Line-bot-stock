@@ -5,22 +5,32 @@ Created on Sat Apr 26 15:57:21 2025
 @author: ASUS TUF Gaming F15
 """
 
-import twstock
-from flask import Flask,request,abort
-from linebot import LineBotApi,WebhookHandler
-from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent,TextMessage,TextSendMessage,ImageSendMessage
-import matplotlib.pyplot as plt
-import datetime
 import os
-import seaborn as sns
-import re
+import datetime
 import threading
 import time
 
-# Line Bot 設定
-CHANNEL_ACCESS_TOKEN = '*****************'
-CHANNEL_SECRET = '***********************'
+from flask import Flask, request, abort
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import twstock
+import re
+
+# ✅ 載入 .env（本地測試用）
+from dotenv import load_dotenv
+load_dotenv()
+
+# Line Bot 設定，從環境變數中讀取機密資訊
+CHANNEL_ACCESS_TOKEN = os.environ.get("CHANNEL_ACCESS_TOKEN")
+CHANNEL_SECRET = os.environ.get("CHANNEL_SECRET")
+
+# === 安全檢查（防止沒設變數時報錯） ===
+if not CHANNEL_ACCESS_TOKEN or CHANNEL_SECRET :
+    raise Exception("❌ 未設定 CHANNEL_ACCESS_TOKEN 或 CHANNEL_SECRET，請檢查環境變數")
 
 #設定seaborn風格
 sns.set_theme(style='ticks')
@@ -29,7 +39,7 @@ sns.set_theme(style='ticks')
 plt.rcParams['font.sans-serif'] = ['Noto Sans TC','Taipei Sans TC Beta', 'SimHei','Microsoft JhengHei']
 plt.rcParams['axes.unicode_minus'] = False
 
-# 設定字型，避免中文亂碼
+# Flask 應用
 app = Flask(__name__)
 
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
@@ -105,7 +115,7 @@ def build_stock_reply(stock_id,days=5):
         return False, price_text, None
 
     filename = plot_stock_trend(stock_id,days)
-    image_url = f"https://****-123-241-31-30.ngrok-free.app/{filename}"
+    image_url = f"https://line-bot-stock-9881.onrender.com/{filename}"
     return True, price_text, image_url
 
 def parse_user_input(user_message):
