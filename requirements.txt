@@ -1,6 +1,7 @@
 Flask==2.3.3
 line-bot-sdk==2.4.2
 twstock==1.1.0
+numpy==1.24.3
 matplotlib==3.7.1
 seaborn==0.12.2
 gunicorn==20.1.0
