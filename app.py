@@ -12,6 +12,7 @@ from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage, ImageSendMessage
+from linebot.models import FollowEvent
 
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
@@ -243,8 +244,23 @@ def handle_message(event):
                         preview_image_url=image_url
                         )
                     ]
-                
                 )
+@handler.add(FollowEvent)
+def handle_follow(event):
+    user_id = event.source.user_id
+    welcome_msg = (
+        "👋 歡迎加入台灣股市小幫手！\n\n"
+        "以下是你可以使用的功能指令：\n"
+        "📌 即時股價：輸入股票代碼，如 `2330`\n"
+        "📈 趨勢圖：輸入 `2330 30天` 或 `查 2330 2317`\n"
+        "🔔 價格警示：輸入 `設定 2330 > 800`\n"
+        "🧾 每 5 分鐘會自動檢查是否達成價格條件\n"
+        "💡 圖表會自動標註最高價/最低價\n\n"
+        "若要查詢多支股票請用空白分隔，如：`查 2330 2881 2317`\n"
+        "🚀 祝你投資順利！"
+        )
+    line_bot_api.push_message(user_id,TextSendMessage(text=welcome_msg))
+            
 #推播追蹤價格          
 def run_alert_monitor_once():
     #加入日誌輸出來確認 alert_monitor() 有沒有真的跑起來
