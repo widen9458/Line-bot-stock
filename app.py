@@ -266,6 +266,8 @@ def alert_monitor():
                     stock = twstock.realtime.get(stock_id)
                     if stock['success']:
                         current_price = float(stock['realtime']['latest_trade_price'])
+                        print(f"[DEBUG] 檢查 {stock_id} 當前價格 {current_price}, 條件 {operator} {target}")
+
                         
                         #符合條件就推播提醒
                         if (operator == '>' and current_price > target) or \
