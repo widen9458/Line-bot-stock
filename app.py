@@ -37,7 +37,7 @@ if not CHANNEL_ACCESS_TOKEN or not CHANNEL_SECRET :
 sns.set_theme(style='ticks')
 
 #指定中文字型
-font_path = os.path.join('fonts','NotoSansTC-VariableFont_wght.ttf')
+font_path = os.path.join('fonts','NotoSansTC-Regular.ttf')
 font_prop = fm.FontProperties(fname=font_path)
 plt.rcParams['font.family'] = font_prop.get_name()
 
