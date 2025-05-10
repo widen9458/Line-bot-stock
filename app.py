@@ -2,13 +2,11 @@
 """
 Created on Sat Apr 26 15:57:21 2025
 
-@author: ASUS TUF Gaming F15
+@author: HOW
 """
 
 import os
 import datetime
-import threading
-import time
 
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
@@ -247,49 +245,46 @@ def handle_message(event):
                     ]
                 
                 )
-#監控追蹤價格          
-def alert_monitor():
+#推播追蹤價格          
+def run_alert_monitor_once():
     #加入日誌輸出來確認 alert_monitor() 有沒有真的跑起來
-    print('[INFO] Alert monitor thread started')
-    while True:
-        if not alerts:
-            time.sleep(60)
-            continue
+    print('[INFO] Runing alert monitor ONCE')
+    if not alerts:
+        print('[INFO] 無警示設定')
+        return
         
-        for user_id,user_alerts in alerts.items():
-            for alert in user_alerts:
-                stock_id = alert['stock_id']
-                operator = alert['operator']
-                target = alert['target']
-                
-                try:
-                    stock = twstock.realtime.get(stock_id)
-                    if stock['success']:
-                        current_price = float(stock['realtime']['latest_trade_price'])
-                        print(f"[DEBUG] 檢查 {stock_id} 當前價格 {current_price}, 條件 {operator} {target}")
-
-                        
-                        #符合條件就推播提醒
-                        if (operator == '>' and current_price > target) or \
-                            (operator == '<' and current_price < target):
-                                
-                                msg = f"📈警示觸發:{stock['info']['name']}({stock_id})現在{current_price}元，已{'高於' if operator == '>' else '低於'}{target}"
-                                line_bot_api.push_message(user_id,TextSendMessage(text=msg))
-                                
-                                #推播後這條件就移除(避免重複通知)
-                                user_alerts.remove(alert)
-                                
-                except Exception as e:
-                    print(f'[警示錯誤]{stock_id}:{e}')
-                    
-        time.sleep(60)#每60秒檢查一次
+    for user_id,user_alerts in alerts.items():
+        for alert in user_alerts[:]:
+            stock_id = alert['stock_id']
+            operator = alert['operator']
+            target = alert['target']
             
+            try:
+                stock = twstock.realtime.get(stock_id)
+                if stock['success']:
+                    current_price = float(stock['realtime']['latest_trade_price'])
+                    
+                    print(f"[DEBUG] 檢查 {stock_id} 當前價格 {current_price}, 條件 {operator} {target}")
+                    #符合條件就推播提醒
+                    if (operator == '>' and current_price > target) or \
+                        (operator == '<' and current_price < target):
+                    
+                        msg = f"📈警示觸發:{stock['info']['name']}({stock_id})現在{current_price}元，已{'高於' if operator == '>' else '低於'}{target}元"
+                        line_bot_api.push_message(user_id,TextSendMessage(text=msg))
+                        
+                        #推播後這條件就移除(避免重複通知)
+                        user_alerts.remove(alert)
+                    
+            except Exception as e:
+                print(f'[警示錯誤]{stock_id}:{e}')
+
+@app.route("/check_alerts",methods=['GET'])
+def check_alerts():
+    run_alert_monitor_once()
+    return "✅ 價格警示已檢查",200
+                    
 # ========== 主程式 ==========
 
 if __name__ == "__main__":
-    
-    #啟動價格監控執行緒
-    t = threading.Thread(target=alert_monitor,daemon=True)
-    t.start()
     
     app.run()
