@@ -91,11 +91,12 @@ def plot_stock_trend(stock_id,days=5):
     #畫圖
     plt.figure(figsize=(8,4))
     plt.plot(dates,prices,marker="o")
-    plt.title(f'{stock_id} 最近{days}日收盤價',fontsize=16)
-    plt.xlabel('日期',fontsize=12)
-    plt.ylabel('收盤價(元)',fontsize=12)
+    plt.title(f'{stock_id} 最近{days}日收盤價',fontsize=16,fontproperties=font_prop)
+    plt.xlabel('日期',fontsize=12,fontproperties=font_prop)
+    plt.ylabel('收盤價(元)',fontsize=12,fontproperties=font_prop)
     plt.grid(True,linestyle='--',alpha=0.7)
-    plt.xticks(rotation=45)
+    plt.xticks(rotation=45, fontproperties=font_prop)
+    plt.yticks(fontproperties=font_prop)
     
     #標記最高點與最低點
     plt.scatter([max_date],[max_price],color='#d62728',s=80,zorder=5,marker='v',label='最高價')
@@ -103,9 +104,9 @@ def plot_stock_trend(stock_id,days=5):
     
     #美化文字
     plt.text(max_date,max_price + 1,f'最高{max_price}',color='#d62728',fontsize=10,
-             ha='center',bbox=dict(facecolor='white',alpha=0.8,edgecolor='none'))
+             ha='center',fontproperties=font_prop,bbox=dict(facecolor='white',alpha=0.8,edgecolor='none'))
     plt.text(min_date,min_price - 2,f'最低{min_price}',color='#1f77b4',fontsize=10,
-             ha='center',bbox=dict(facecolor='white',alpha=0.8,edgecolor='none'))
+             ha='center',fontproperties=font_prop,bbox=dict(facecolor='white',alpha=0.8,edgecolor='none'))
     
     filename = f'static/{stock_id}_trend.png'
     plt.tight_layout()
